@@ -17,6 +17,11 @@ The module does not type-check, resolve imports, downlevel JavaScript, or read a
 namespaces, constructor parameter properties, import assignments, and export
 assignments—is returned as an `unsupported-syntax` error.
 
+## Documentation
+
+- [Guide and API reference](docs/API.md) explains erasable TypeScript, unsupported syntax, diagnostics, TSX runtime emission, and transform guarantees.
+- Tests can be run with `doof test ts`.
+
 ## Errors
 
 Failures return `TsError` with a `kind`, human-readable `message`, and one-based
