@@ -93,23 +93,19 @@ inline doof::Result<std::shared_ptr<NativeSyntaxNode>, std::string> parse(
 ) {
     std::unique_ptr<TSParser, decltype(&ts_parser_delete)> parser(ts_parser_new(), &ts_parser_delete);
     if (!parser) {
-        return doof::Result<std::shared_ptr<NativeSyntaxNode>, std::string>::failure("failed to allocate Tree-sitter parser");
+        return doof::Failure<std::string>{"failed to allocate Tree-sitter parser"};
     }
     if (!ts_parser_set_language(parser.get(), language)) {
-        return doof::Result<std::shared_ptr<NativeSyntaxNode>, std::string>::failure(
-            std::string("incompatible Tree-sitter ") + languageName + " grammar"
-        );
+        return doof::Failure<std::string>{std::string("incompatible Tree-sitter ") + languageName + " grammar"};
     }
 
     TSTree *rawTree = ts_parser_parse_string(parser.get(), nullptr, source.data(), static_cast<uint32_t>(source.size()));
     if (rawTree == nullptr) {
-        return doof::Result<std::shared_ptr<NativeSyntaxNode>, std::string>::failure("Tree-sitter failed to parse source");
+        return doof::Failure<std::string>{"Tree-sitter failed to parse source"};
     }
 
     std::shared_ptr<TSTree> tree(rawTree, &ts_tree_delete);
-    return doof::Result<std::shared_ptr<NativeSyntaxNode>, std::string>::success(
-        std::make_shared<NativeSyntaxNode>(tree, ts_tree_root_node(rawTree))
-    );
+    return doof::Success<std::shared_ptr<NativeSyntaxNode>>{std::make_shared<NativeSyntaxNode>(tree, ts_tree_root_node(rawTree))};
 }
 
 inline doof::Result<std::shared_ptr<NativeSyntaxNode>, std::string> parseTypeScript(const std::string &source) {
