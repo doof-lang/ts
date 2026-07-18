@@ -1,21 +1,21 @@
 export import class NativeSyntaxNode from "./native_syntax_tree.hpp" as doof_ts::NativeSyntaxNode {
-  kind(): string
-  startByte(): int
-  endByte(): int
-  startRow(): int
-  endRow(): int
-  childCount(): int
-  child(index: int): NativeSyntaxNode
-  childFieldName(index: int): string
-  isNamed(): bool
-  isMissing(): bool
-  isError(): bool
-  hasError(): bool
-  text(source: string): string
+  isolated kind(): string
+  isolated startByte(): int
+  isolated endByte(): int
+  isolated startRow(): int
+  isolated endRow(): int
+  isolated childCount(): int
+  isolated child(index: int): NativeSyntaxNode
+  isolated childFieldName(index: int): string
+  isolated isNamed(): bool
+  isolated isMissing(): bool
+  isolated isError(): bool
+  isolated hasError(): bool
+  isolated text(source: string): string
 }
 
-export import function parseTypeScript(source: string): Result<NativeSyntaxNode, string>
+export import isolated function parseTypeScript(source: string): Result<NativeSyntaxNode, string>
   from "./native_syntax_tree.hpp" as doof_ts::parseTypeScript
 
-export import function parseTsx(source: string): Result<NativeSyntaxNode, string>
+export import isolated function parseTsx(source: string): Result<NativeSyntaxNode, string>
   from "./native_syntax_tree.hpp" as doof_ts::parseTsx
