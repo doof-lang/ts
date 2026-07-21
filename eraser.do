@@ -5,7 +5,7 @@ import { buildTypeScriptPlan } from "./typescript_rules"
 import { Edit, EditKind, ErasurePlan, Span, SyntaxDialect, TsError } from "./types"
 
 export function transpileWithDialect(source: string, dialect: SyntaxDialect): Result<string, TsError> {
-  let root: NativeSyntaxNode | null = null
+  let root: NativeSyntaxNode | none = none
   case parseTypeScript(source) {
     s: Success -> { root = s.value }
     f: Failure -> { return Failure { error: internalError(f.error) } }

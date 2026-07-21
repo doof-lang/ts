@@ -36,7 +36,7 @@ function requireTsxFailure(source: string): TsError {
   return TsError { kind: "internal", message: "unreachable", line: 1, column: 1 }
 }
 
-export function testErasesCommonTypeSyntaxAndRunsOutput(): void {
+export function testErasesCommonTypeSyntaxAndRunsOutput(): none {
   source := `interface User { name: string }
 type Identifier = string | number
 const answer: number = (42 as number)!`
@@ -59,7 +59,7 @@ const answer: number = (42 as number)!`
   }
 }
 
-export function testPreservesVerbatimValueImports(): void {
+export function testPreservesVerbatimValueImports(): none {
   source := `import type DefaultType from "types"
 import { type Shape, runtimeValue, type Other } from "pkg"
 export { type Shape, runtimeValue }
@@ -73,7 +73,7 @@ export type { Other } from "pkg"`
   assert(!output.contains("Other"), "expected type exports to be erased")
 }
 
-export function testErasesClassTypesAndTypeOnlyMembers(): void {
+export function testErasesClassTypesAndTypeOnlyMembers(): none {
   source := `abstract class Box<T> implements Container<T> {
   public readonly value!: T
   protected abstract read(): T
@@ -90,12 +90,12 @@ export function testErasesClassTypesAndTypeOnlyMembers(): void {
   assert(!output.contains("fallback?"), "expected optional marker to be erased")
 }
 
-export function testErasesThisParametersAndFieldMarkers(): void {
+export function testErasesThisParametersAndFieldMarkers(): none {
   source := `class Example {
   optional?: string
   definite!: number
   declare ambient: boolean
-  method?(this: Example, value?: number): void {}
+  method?(this: Example, value?: number): none {}
 }
 let assigned!: string`
   output := requireTranspile(source)
@@ -114,7 +114,7 @@ let assigned!: string`
   }
 }
 
-export function testTypeOnlyStatementsRemainAsiSafe(): void {
+export function testTypeOnlyStatementsRemainAsiSafe(): none {
   source := `const first = 1
 type Hidden = string
 (function () { return first })()`
@@ -128,7 +128,7 @@ type Hidden = string
   }
 }
 
-export function testPreservesCommentsInsideErasedSyntax(): void {
+export function testPreservesCommentsInsideErasedSyntax(): none {
   source := `type /* retained */ Name = string
 const value /* annotation */: number = 1`
   output := requireTranspile(source)
@@ -138,7 +138,7 @@ const value /* annotation */: number = 1`
   assert(output.length == source.length, "expected comment preservation not to move positions")
 }
 
-export function testRejectsRuntimeBearingTypeScript(): void {
+export function testRejectsRuntimeBearingTypeScript(): none {
   assert(requireFailure("enum Direction { Up, Down }").kind == "unsupported-syntax", "expected enum rejection")
   assert(requireFailure("namespace Runtime { export const value = 1 }").kind == "unsupported-syntax", "expected namespace rejection")
   assert(requireFailure("class Point { constructor(public x: number) {} }").kind == "unsupported-syntax", "expected parameter property rejection")
@@ -147,19 +147,19 @@ export function testRejectsRuntimeBearingTypeScript(): void {
   assert(requireFailure("const value = <number>1").kind == "unsupported-syntax", "expected angle assertion rejection")
 }
 
-export function testReportsSyntaxLocationsWithUnicodeColumns(): void {
+export function testReportsSyntaxLocationsWithUnicodeColumns(): none {
   error := requireFailure("const café: string = )")
   assert(error.kind == "syntax", "expected syntax error kind")
   assert(error.line == 1, "expected one-based line")
   assert(error.column == 22, "expected a one-based Unicode column: ${error.column}: ${error.message}")
 }
 
-export function testRejectsTsx(): void {
+export function testRejectsTsx(): none {
   error := requireFailure("const element = <div>Hello</div>")
   assert(error.kind == "syntax", "expected TSX to remain outside the TypeScript dialect")
 }
 
-export function testTsxAutomaticRuntimeUsesJsxAndJsxs(): void {
+export function testTsxAutomaticRuntimeUsesJsxAndJsxs(): none {
   source := `const single = <div id="one">hello</div>
 const multiple = <Panel><span />{value}</Panel>`
   output := requireTranspileTsx(source)
@@ -171,7 +171,7 @@ const multiple = <Panel><span />{value}</Panel>`
   assert(!output.contains("jsxDEV"), "expected production helpers only")
 }
 
-export function testTsxFragmentsAttributesKeysAndCustomRuntime(): void {
+export function testTsxFragmentsAttributesKeysAndCustomRuntime(): none {
   source := `const view = <><Widget enabled key="item" {...props} label={name} />&amp;</>`
   output := requireTranspileTsx(source, TsxOptions { jsxImportSource: "preact" })
 
@@ -185,7 +185,7 @@ export function testTsxFragmentsAttributesKeysAndCustomRuntime(): void {
   assert(requireTranspile(output) == output, "expected comprehensive TSX output to be valid JavaScript")
 }
 
-export function testTsxMergesTextEntitiesAndSupportsSpreadChildren(): void {
+export function testTsxMergesTextEntitiesAndSupportsSpreadChildren(): none {
   source := `const text = <div>Hello &amp; goodbye</div>
 const spread = <List>{...items}</List>`
   output := requireTranspileTsx(source)
@@ -193,7 +193,7 @@ const spread = <List>{...items}</List>`
   assert(output.contains("_jsxs(List, {children: [...items]})"), "expected spread children to use a JSXS array: ${output}")
 }
 
-export function testTsxErasesTypesInsideJsx(): void {
+export function testTsxErasesTypesInsideJsx(): none {
   source := `const value: number = 1
 const view = <Box<string> count={(value as number)!} />`
   output := requireTranspileTsx(source)
@@ -202,7 +202,7 @@ const view = <Box<string> count={(value as number)!} />`
   assert(!output.contains("as number"), "expected assertions inside JSX expressions to be erased")
 }
 
-export function testTsxPreservesUserCodeLines(): void {
+export function testTsxPreservesUserCodeLines(): none {
   source := `const before = 1
 const view = (
   <section>
@@ -220,18 +220,18 @@ const after = before + 2`
   assert(body.split("\n")[7].contains("const after"), "expected following code to retain its line")
 }
 
-export function testTsxPreservesCrLfLinesWithUnicode(): void {
-  source := "const café = 1\r\nconst view = <div>\r\n  {café}\r\n</div>\r\nconst after = café"
+export function testTsxPreservesCrLfLinesWithUnicode(): none {
+  source := "const cafÃ© = 1\r\nconst view = <div>\r\n  {cafÃ©}\r\n</div>\r\nconst after = cafÃ©"
   output := requireTranspileTsx(source)
   importAt := output.indexOf("\nimport {")
   assert(importAt > 0, "expected appended runtime import")
   body := output.substring(0, importAt)
   assert(body.split("\r\n").length == source.split("\r\n").length, "expected CRLF count to remain stable")
-  assert(body.split("\r\n")[2].contains("café"), "expected Unicode expression to retain its line")
+  assert(body.split("\r\n")[2].contains("cafÃ©"), "expected Unicode expression to retain its line")
   assert(body.split("\r\n")[4].contains("const after"), "expected following CRLF code to retain its line")
 }
 
-export function testTsxAvoidsHelperNameCollisionsAndElidesUnusedImports(): void {
+export function testTsxAvoidsHelperNameCollisionsAndElidesUnusedImports(): none {
   source := `const _jsx = 1
 const node = <div />`
   output := requireTranspileTsx(source)
@@ -244,7 +244,7 @@ const node = <div />`
   assert(plain.length == "const value: number = 1".length, "expected ordinary erasure to retain its length")
 }
 
-export function testGeneratedTsxCallsExecute(): void {
+export function testGeneratedTsxCallsExecute(): none {
   source := `const result = <Box>{21 + 21}</Box>`
   output := requireTranspileTsx(source)
   importAt := output.indexOf("\nimport {")
@@ -264,19 +264,19 @@ function _jsx(type, props, key) { return props.children }
   }
 }
 
-export function testTsxReportsSyntaxErrors(): void {
+export function testTsxReportsSyntaxErrors(): none {
   error := requireTsxFailure("const view = <div>\n  <span />")
   assert(error.kind == "syntax", "expected TSX syntax error")
   assert(error.line == 2, "expected TSX syntax error line: ${error.line}")
 }
 
-export function testPlainJavaScriptAndEmptyInputAreUnchanged(): void {
+export function testPlainJavaScriptAndEmptyInputAreUnchanged(): none {
   javascript := "const value = /type/.test('type') // type"
   assert(requireTranspile(javascript) == javascript, "expected JavaScript to remain unchanged")
   assert(requireTranspile("") == "", "expected empty input to remain empty")
 }
 
-export function testDialectNeutralErasureEngine(): void {
+export function testDialectNeutralErasureEngine(): none {
   source := "alpha\nbeta gamma"
   output := applyErasurePlan(
     source,
@@ -291,10 +291,10 @@ export function testDialectNeutralErasureEngine(): void {
   assert(output == ";    \nbeta  am  ", "expected generic edits, statement guards, and protected spans")
 }
 
-export function testGrammarCoverageTableIsComplete(): void {
+export function testGrammarCoverageTableIsComplete(): none {
   kinds := typescriptSpecificKinds()
   assert(kinds.length == 75, "expected coverage for the pinned grammar's TypeScript-only named nodes")
   for kind of kinds {
-    assert(typescriptDisposition(kind) != null, "expected a disposition for ${kind}")
+    assert(typescriptDisposition(kind) != none, "expected a disposition for ${kind}")
   }
 }

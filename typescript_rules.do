@@ -20,13 +20,13 @@ import { Edit, EditKind, ErasurePlan, Span, TsError } from "./types"
 
 export function buildTypeScriptPlan(source: string, root: NativeSyntaxNode): Result<ErasurePlan, TsError> {
   syntax := findSyntaxError(root)
-  if syntax != null {
+  if syntax != none {
     return Failure { error: syntaxError(source, syntax!) }
   }
 
   edits: Edit[] := []
   comments: Span[] := []
-  try collectNode(source, root, null, edits, comments)
+  try collectNode(source, root, none, edits, comments)
   return Success {
     value: ErasurePlan {
       edits,
@@ -35,16 +35,16 @@ export function buildTypeScriptPlan(source: string, root: NativeSyntaxNode): Res
   }
 }
 
-function findSyntaxError(node: NativeSyntaxNode): NativeSyntaxNode | null {
+function findSyntaxError(node: NativeSyntaxNode): NativeSyntaxNode | none {
   if node.isError() || node.isMissing() {
     return node
   }
   if !node.hasError() {
-    return null
+    return none
   }
   for index of 0..<node.childCount() {
     found := findSyntaxError(node.child(index))
-    if found != null {
+    if found != none {
       return found
     }
   }
@@ -54,10 +54,10 @@ function findSyntaxError(node: NativeSyntaxNode): NativeSyntaxNode | null {
 function collectNode(
   source: string,
   node: NativeSyntaxNode,
-  parent: NativeSyntaxNode | null,
+  parent: NativeSyntaxNode | none,
   edits: Edit[],
   comments: Span[],
-): Result<void, TsError> {
+): Result<none, TsError> {
   kind := node.kind()
 
   if kind == "comment" {

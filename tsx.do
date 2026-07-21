@@ -16,7 +16,7 @@ export function transpileTsxSource(
   source: string,
   options: TsxOptions,
 ): Result<string, TsError> {
-  let root: NativeSyntaxNode | null = null
+  let root: NativeSyntaxNode | none = none
   case parseTsx(source) {
     s: Success -> { root = s.value }
     f: Failure -> { return Failure { error: internalError(f.error) } }
@@ -45,7 +45,7 @@ function collectReplacements(
   source: string,
   usage: JsxRuntimeUsage,
   replacements: Replacement[],
-): void {
+): none {
   kind := node.kind()
   if kind == "jsx_element" || kind == "jsx_self_closing_element" {
     replacements.push(Replacement {
@@ -82,7 +82,7 @@ function writeRange(
   output: BlobBuilder,
   start: int,
   end: int,
-): void {
+): none {
   reader.setPosition(long(start))
   for index of start..<end {
     output.writeByte(reader.readByte())

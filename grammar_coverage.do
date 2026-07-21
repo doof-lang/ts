@@ -26,7 +26,7 @@ export function typescriptSpecificKinds(): string[] {
   ]
 }
 
-export function typescriptDisposition(kind: string): string | null {
+export function typescriptDisposition(kind: string): string | none {
   if kind == "enum_declaration" || kind == "enum_assignment" || kind == "enum_body"
     || kind == "internal_module" || kind == "module" || kind == "nested_identifier"
     || kind == "import_alias" || kind == "import_require_clause" || kind == "type_assertion" {
@@ -70,5 +70,5 @@ export function typescriptDisposition(kind: string): string | null {
     return "type-interior"
   }
 
-  return null
+  return none
 }

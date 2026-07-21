@@ -48,7 +48,7 @@ export function isParameterProperty(node: NativeSyntaxNode): bool {
   return false
 }
 
-export function eraseDirectToken(node: NativeSyntaxNode, token: string, edits: Edit[]): void {
+export function eraseDirectToken(node: NativeSyntaxNode, token: string, edits: Edit[]): none {
   for index of 0..<node.childCount() {
     child := node.child(index)
     if child.kind() == token {
@@ -80,15 +80,15 @@ export function firstNamedChild(node: NativeSyntaxNode): NativeSyntaxNode {
   panic("expected ${node.kind()} to contain a named child")
 }
 
-export function enclosingExport(parent: NativeSyntaxNode | null, node: NativeSyntaxNode): NativeSyntaxNode {
-  if parent != null && parent!.kind() == "export_statement" { return parent! }
+export function enclosingExport(parent: NativeSyntaxNode | none, node: NativeSyntaxNode): NativeSyntaxNode {
+  if parent != none && parent!.kind() == "export_statement" { return parent! }
   return node
 }
 
-export function eraseListItem(node: NativeSyntaxNode, parent: NativeSyntaxNode | null, edits: Edit[]): void {
+export function eraseListItem(node: NativeSyntaxNode, parent: NativeSyntaxNode | none, edits: Edit[]): none {
   let start = node.startByte()
   let end = node.endByte()
-  if parent != null {
+  if parent != none {
     p := parent!
     for index of 0..<p.childCount() {
       child := p.child(index)
@@ -104,7 +104,7 @@ export function eraseListItem(node: NativeSyntaxNode, parent: NativeSyntaxNode |
   edits.push(Edit { start, end, kind: .Erase })
 }
 
-export function collectComments(node: NativeSyntaxNode, comments: Span[]): void {
+export function collectComments(node: NativeSyntaxNode, comments: Span[]): none {
   if node.kind() == "comment" {
     comments.push(Span { start: node.startByte(), end: node.endByte() })
     return
@@ -112,7 +112,7 @@ export function collectComments(node: NativeSyntaxNode, comments: Span[]): void 
   for index of 0..<node.childCount() { collectComments(node.child(index), comments) }
 }
 
-export function collectCommentsAfter(node: NativeSyntaxNode, start: int, comments: Span[]): void {
+export function collectCommentsAfter(node: NativeSyntaxNode, start: int, comments: Span[]): none {
   if node.kind() == "comment" && node.startByte() >= start {
     comments.push(Span { start: node.startByte(), end: node.endByte() })
     return

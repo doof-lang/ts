@@ -22,7 +22,7 @@ export function renderJsx(
   usage: JsxRuntimeUsage,
 ): string {
   if node.kind() == "jsx_self_closing_element" {
-    return renderElement(node, null, source, usage)
+    return renderElement(node, none, source, usage)
   }
   openTag := fieldChild(node, "open_tag")
   return renderElement(node, openTag, source, usage)
@@ -30,13 +30,13 @@ export function renderJsx(
 
 function renderElement(
   node: NativeSyntaxNode,
-  openTag: NativeSyntaxNode | null,
+  openTag: NativeSyntaxNode | none,
   source: string,
   usage: JsxRuntimeUsage,
 ): string {
-  tagNode := fieldChild(if openTag != null then openTag! else node, "name")
+  tagNode := fieldChild(if openTag != none then openTag! else node, "name")
   let tag = ""
-  if tagNode == null {
+  if tagNode == none {
     usage.usesFragment = true
     tag = usage.fragmentAlias
   } else {
@@ -44,7 +44,7 @@ function renderElement(
   }
 
   attributes: NativeSyntaxNode[] := []
-  tagContainer := if openTag != null then openTag! else node
+  tagContainer := if openTag != none then openTag! else node
   for index of 0..<tagContainer.childCount() {
     child := tagContainer.child(index)
     if tagContainer.childFieldName(index) == "attribute" {
@@ -53,7 +53,7 @@ function renderElement(
   }
 
   children: RenderedChild[] := []
-  if openTag != null {
+  if openTag != none {
     let pendingText = ""
     let pendingTextRow = 0
     for index of 0..<node.childCount() {
@@ -123,7 +123,7 @@ function renderElement(
     name := nameNode.text(source)
     valueNode := lastAttributeValue(attribute, nameNode)
     let value = "true"
-    if valueNode != null {
+    if valueNode != none {
       value = renderAttributeValue(valueNode!, source, usage)
     }
     if name == "key" {
@@ -210,11 +210,11 @@ function isSpreadExpression(node: NativeSyntaxNode): bool {
   return false
 }
 
-function fieldChild(node: NativeSyntaxNode, field: string): NativeSyntaxNode | null {
+function fieldChild(node: NativeSyntaxNode, field: string): NativeSyntaxNode | none {
   for index of 0..<node.childCount() {
     if node.childFieldName(index) == field { return node.child(index) }
   }
-  return null
+  return none
 }
 
 function firstNamedChild(node: NativeSyntaxNode): NativeSyntaxNode {
@@ -228,8 +228,8 @@ function firstNamedChild(node: NativeSyntaxNode): NativeSyntaxNode {
 function lastAttributeValue(
   attribute: NativeSyntaxNode,
   name: NativeSyntaxNode,
-): NativeSyntaxNode | null {
-  let result: NativeSyntaxNode | null = null
+): NativeSyntaxNode | none {
+  let result: NativeSyntaxNode | none = none
   for index of 0..<attribute.childCount() {
     child := attribute.child(index)
     if child.isNamed() && child.startByte() != name.startByte() {
