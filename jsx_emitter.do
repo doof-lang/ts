@@ -5,9 +5,9 @@ export class JsxRuntimeUsage {
   readonly jsxAlias: string
   readonly jsxsAlias: string
   readonly fragmentAlias: string
-  usesJsx = false
-  usesJsxs = false
-  usesFragment = false
+  let usesJsx = false
+  let usesJsxs = false
+  let usesFragment = false
 }
 
 class RenderedChild {
