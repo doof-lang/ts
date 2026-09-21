@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "dependencies": [
+    {
+      "name": "tree-sitter",
+      "kind": "archive",
+      "url": "https://github.com/tree-sitter/tree-sitter/archive/refs/tags/v0.26.9.tar.gz",
+      "destination": "vendor/tree-sitter",
+      "sha256": "8e14780500933f43d86662fcaa1b0ce99ebe9c220f4680bc929dce09a0e0cfc6",
+      "stripComponents": 1,
+      "keep": ["LICENSE", "lib"]
+    },
+    {
+      "name": "tree-sitter-typescript",
+      "kind": "archive",
+      "url": "https://github.com/tree-sitter/tree-sitter-typescript/archive/refs/tags/v0.23.2.tar.gz",
+      "destination": "vendor/tree-sitter-typescript",
+      "sha256": "2c4ce711ae8d1218a3b2f899189298159d672870b5b34dff5d937bed2f3e8983",
+      "stripComponents": 1,
+      "keep": ["LICENSE", "common", "typescript", "tsx"]
+    }
+  ]
+}
