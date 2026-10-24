@@ -4,27 +4,18 @@
   "license": "ISC",
   "build": {
     "native": {
-      "includePaths": [
-        "vendor/tree-sitter/lib/include",
-        "vendor/tree-sitter/lib/src",
-        "vendor/tree-sitter-typescript/typescript/src",
-        "vendor/tree-sitter-typescript/tsx/src"
-      ],
-      "sourceFiles": [
-        "vendor/tree-sitter/lib/src/lib.c",
-        "vendor/tree-sitter-typescript/typescript/src/parser.c",
-        "vendor/tree-sitter-typescript/typescript/src/scanner.c",
-        "vendor/tree-sitter-typescript/tsx/src/parser.c",
-        "vendor/tree-sitter-typescript/tsx/src/scanner.c"
-      ],
+      "vendor": {
+        "key": "tree-sitter-0.26.9-typescript-0.23.2-r1",
+        "static": ["libtree-sitter.a"]
+      },
       "extraCopyPaths": [
-        "native_syntax_tree.hpp",
-        "vendor/tree-sitter/LICENSE",
-        "vendor/tree-sitter-typescript/LICENSE",
-        "vendor/tree-sitter-typescript/common/scanner.h",
-        "vendor/tree-sitter-typescript/typescript/src/node-types.json",
-        "vendor/tree-sitter-typescript/tsx/src/node-types.json"
-      ]
+        "native_syntax_tree.hpp"
+      ],
+      "windows": {
+        "vendor": {
+          "static": ["tree-sitter.lib"]
+        }
+      }
     }
   },
   "dependencies": {}
